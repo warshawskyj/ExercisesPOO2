@@ -1,11 +1,11 @@
 # Crée par Jonah Warshawsky
-# Exercices de programmation en Python
-import random
+# Exercices de programmation orientee objet en Python
+from random import randint
 
 
 def getAbilityScore():
-    d6s = [random.randint(1, 6) for i in range(4)]
-    d6s.remove(min(d6s))
+    d6s = [randint(1, 6) for i in range(4)]
+    d6s.remove(min(d6s)) # On enleve le plus petit des 4
     return sum(d6s)
 
 
@@ -17,8 +17,8 @@ class NPC:
         self.intelligence = getAbilityScore()
         self.sagesse = getAbilityScore()
         self.charisme = getAbilityScore()
-        self.ac = random.randint(1, 12)
-        self.pointsDeVie = random.randint(1, 20)
+        self.ac = randint(1, 12)
+        self.pointsDeVie = randint(1, 20)
         self.race = str
         self.espece = str
         self.profession = str
@@ -37,7 +37,7 @@ class Kobold(NPC):
         self.espece = "Kobold"
 
     def attaquer(self, npc):
-        d20 = random.randint(1, 20) + self.force
+        d20 = randint(1, 20) + self.force
         if d20 >= npc.ac:
             npc.subir_dommage(self.force)
 
@@ -50,10 +50,14 @@ class Hero(NPC):
         super().__init__()
         self.espece = "Humain"
 
-    def attaquer(self, npc):
-        d20 = random.randint(1, 20) + self.force
-        if d20 >= npc.ac:
-            npc.subir_dommage(random.randint(1, 6) + self.force)
+    @staticmethod
+    def attaquer(npc):
+        d20 = randint(1, 20)
+        if d20 == 20:  # attaque critique
+            npc.subir_dommage(randint(1, 8))
+        elif d20 != 1 and d20 >= npc.ac:  # attaque normale
+            npc.subir_dommage(randint(1, 6))
+        # attaque ratee - on fait rien
 
     def subir_dommage(self, dommage):
         self.pointsDeVie -= dommage
